@@ -6,7 +6,8 @@
   "scripts": {
     "compile": "npx tsc",
     "watch": "npx tsc -w",
-    "start": "node dist/app.js",
+    "lint": "npx eslint src/**/*",
+    "start": "DEBUG=* node dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -27,10 +28,13 @@
   "homepage": "https://github.com/nikfarjam/Node-template-service#readme",
   "devDependencies": {
     "@types/node": "^20.11.17",
+    "@typescript-eslint/eslint-plugin": "^7.0.1",
+    "@typescript-eslint/parser": "^7.0.1",
     "eslint": "^8.56.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "typescript-eslint": "^7.0.1"
   },
   "dependencies": {
-    "chalk": "^5.3.0"
+    "debug": "^4.3.4"
   }
 }
