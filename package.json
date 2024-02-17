@@ -8,7 +8,7 @@
     "watch": "npx tsc -w",
     "lint": "npx eslint src/**/*",
     "start": "DEBUG=* node dist/app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node dist/test.js"
   },
   "repository": {
     "type": "git",
