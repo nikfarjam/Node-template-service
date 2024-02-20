@@ -1,10 +1,17 @@
+const debug = require('debug')('test');
+
 import {sum} from './func'
 
-check(5, sum(2,3));
-checkArray([2,3, 1], [2,3]);
 
 
-function check(expected: number | string | boolean, result: number | string | boolean, message?: string) {
+
+
+
+
+type Val = number | string | boolean;
+
+function check(expected: Val, result: Val, message?: string) {
+    debug(`Expected result is ${expected} but actual value is ${result}`);
     if (expected === result) {
         return;
     }
@@ -17,7 +24,8 @@ function check(expected: number | string | boolean, result: number | string | bo
 }
 
 
-function checkArray(expected: Array<number | string | boolean>, result: Array<number | string | boolean>, message?: string) {
+function checkArray(expected: Array<Val>, result: Array<Val>, message?: string) {
+    debug(`Expected result is ${expected} but actual value is ${result}`);
     if (expected === result) {
         return;
     }

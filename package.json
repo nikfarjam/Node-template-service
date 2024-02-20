@@ -8,7 +8,7 @@
     "watch": "npx tsc -w",
     "lint": "npx eslint src/**/*",
     "start": "DEBUG=* node dist/app.js",
-    "test": "node dist/test.js"
+    "test": "DEBUG=test node dist/test.js"
   },
   "repository": {
     "type": "git",
