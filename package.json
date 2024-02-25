@@ -7,7 +7,7 @@
     "compile": "npx tsc",
     "watch": "npx tsc -w",
     "lint": "npx eslint src/**/*",
-    "start": "DEBUG=* node dist/app.js",
+    "start": "DEBUG=* npx ts-node ./src/app/App.ts",
     "test": "jest --config jest.config.ts",
     "test-watch": "jest --watch --config jest.config.ts"
   },
@@ -28,6 +28,7 @@
   },
   "homepage": "https://github.com/nikfarjam/Node-template-service#readme",
   "devDependencies": {
+    "@types/debug": "^4.1.12",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.11.17",
     "@typescript-eslint/eslint-plugin": "^7.0.1",
