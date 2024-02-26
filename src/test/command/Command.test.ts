@@ -1,24 +1,28 @@
-import {ICommand, LeftCommand, MoveCommand, RightCommand} from '../../app/command/Command';
+import { LeftCommand, MoveCommand, RightCommand } from '../../app/command/Command';
 import { Direction, Position } from '../../app/model/Model';
-import {IRobot, Robot} from '../../app/robot/Robot';
+import { IRobot } from '../../app/robot/Robot';
 
 describe('Command test suite', () => {
 
     let mockRobot: IRobot;
 
-    beforeEach(()=>{
+    beforeEach(() => {
         mockRobot = {
             rotateLeft: jest.fn(),
-            getPosition: jest.fn().mockReturnValue(new Position(2,3,Direction.NORTH)),
+            getPosition: jest.fn().mockReturnValue(new Position(2, 3, Direction.NORTH)),
             rotateRight: jest.fn(),
             move: jest.fn().mockReturnValue(true),
-            dummy: () => {}
+            dummy: () => { }
         };
     });
 
+    afterEach(()=>{
+        jest.clearAllMocks();
+    })
+
     describe('Left Command', () => {
 
-        it('should execute robot rotate left', ()=> {
+        it('should execute robot rotate left', () => {
             const leftCommand = new LeftCommand();
 
             const actual = leftCommand.execute(mockRobot);
@@ -29,7 +33,7 @@ describe('Command test suite', () => {
     })
 
     describe('Right Command', () => {
-        it('should execute robot rotate right', ()=> {
+        it('should execute robot rotate right', () => {
             const rightCommand = new RightCommand();
 
             const actual = rightCommand.execute(mockRobot);
@@ -40,7 +44,7 @@ describe('Command test suite', () => {
     })
 
     describe('Move Command', () => {
-        it('should execute robot move', ()=> {
+        it('should execute robot move', () => {
             const moveCommand = new MoveCommand();
 
             const actual = moveCommand.execute(mockRobot);
