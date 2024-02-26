@@ -27,7 +27,7 @@ describe('Command Factory test suite', () => {
         { input: 'REPORT', expected: reportCommand },
         { input: ' REPORT', expected: reportCommand }
 
-    ])('$input createCommandOrUndefined should be instance of $expected', ({ input, expected }) => {
+    ])('createCommandOrUndefined of $input should be instance of $expected', ({ input, expected }) => {
         const actual = createCommandOrUndefined(input);
 
         expect(actual).toStrictEqual(expected);
@@ -35,14 +35,13 @@ describe('Command Factory test suite', () => {
 
     it.each([
         { input: 'PLACE 0,0,NORTH', expected: new PlaceCommand(new Position(0,0,Direction.NORTH)) },
-        // { input: 'PLACE 2,3,EAST', expected: new PlaceCommand(new Position(2, 3, Direction.EAST)) },
-        // { input: 'place 2,3,west', expected: new PlaceCommand(new Position(2,3,Direction.WEST)) },
+        { input: 'PLACE 2,3,EAST', expected: new PlaceCommand(new Position(2, 3, Direction.EAST)) },
+        { input: 'place 2,3,west', expected: new PlaceCommand(new Position(2,3,Direction.WEST)) },
         // { input: 'PLACE -1,-4,SOUTH', expected: new PlaceCommand(new Position(-1,-4,Direction.SOUTH)) },
-        // { input: ' PLACE   2 , 3 , EAST ', expected: new PlaceCommand(new Position(2,3,Direction.EAST)) },
-        // { input: 'PLACE 1,2,NORTH', expected: new PlaceCommand(new Position(1,2,Direction.NORTH)) },
+        { input: ' PLACE   2 , 3 , EAST ', expected: new PlaceCommand(new Position(2,3,Direction.EAST)) },
+        { input: 'PLACE 1,2,NORTH', expected: new PlaceCommand(new Position(1,2,Direction.NORTH)) },
 
-
-    ])('"$input" createCommandOrUndefined should be instance of $expected', ({ input, expected }) => {
+    ])('createCommandOrUndefined of "$input" should be instance of $expected', ({ input, expected }) => {
         const actual = createCommandOrUndefined(input);
 
         expect(actual).toStrictEqual(expected);
@@ -54,6 +53,7 @@ describe('Command Factory test suite', () => {
         { input: 'place,a,b' },
         { input: 'place,1.2,3.14' },
         { input: '#' },
+        { input: 'PLACE -1,-4,SOUTH' },
 
     ])('createCommandOrUndefined should return undefined for $input', ({ input }) => {
         const actual = createCommandOrUndefined(input);

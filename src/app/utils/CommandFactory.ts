@@ -1,7 +1,6 @@
 import { Direction, Position } from "../model/Model";
 import { ICommand, LeftCommand, MoveCommand, PlaceCommand, ReportCommand, RightCommand } from "../command/Command"
 
-const PLACE = /^PLACE(\d),(\d),(NORTH|EAST|SOUTH|WEST)$/g;
 
 const MOVE = new MoveCommand();
 const REPORT = new ReportCommand();
@@ -9,10 +8,12 @@ const LEFT = new LeftCommand();
 const RIGHT = new RightCommand();
 
 function createCommandOrUndefined(cmd: string): ICommand | undefined {
+    const PLACE = /^PLACE\s+(\d)\s*,\s*(\d)\s*,\s*(NORTH|EAST|SOUTH|WEST)$/g;
+
     if (!cmd) {
         return undefined;
     }
-    const command = cmd.replaceAll(/\s*/g, '').toLocaleUpperCase();
+    const command = cmd.replaceAll(/^\s+|\s+$/g,'').toLocaleUpperCase();
 
     switch (command) {
         case 'MOVE': return MOVE;
