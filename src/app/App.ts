@@ -6,8 +6,10 @@ import { ICommand, ReportCommand } from './command/Command';
 import { Board, IBoard } from './board/Board';
 import { Position } from './model/Model';
 
-const debug = Debug('main');
-const filePath = '/workspaces/Node-template-service/data/sample4.txt';
+const debug = Debug('app:debug');
+const error = Debug('app:error');
+
+const filePath = '/workspaces/Node-template-service/data/sample1.txt';
 
 class App {
 
@@ -36,6 +38,8 @@ class App {
                 } else {
                     success = board.runCommand(command);
                 }
+            } else {            
+                error(`Command for '${line}' is not valid`);
             }
             debug(`Command: ${line} is ${success ? '' : 'NOT'} successful`);
         }
