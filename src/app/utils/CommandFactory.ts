@@ -26,8 +26,8 @@ function createCommandOrUndefined(cmd: string): ICommand | undefined {
     if (place) {
         // With RegEx, place parameters must be valid
         const direction = convertStrToDirection(place[3]);
-        const row = Number.parseInt(place[1]);
-        const column = Number.parseInt(place[2]);
+        const column = Number.parseInt(place[1]);
+        const row = Number.parseInt(place[2]);
         if (direction && Number.isInteger(row) && Number.isInteger(column)) {
             return new PlaceCommand(new Position(row, column, direction));
         }
