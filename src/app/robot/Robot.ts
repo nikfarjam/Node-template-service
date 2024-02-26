@@ -77,7 +77,6 @@ class Robot implements IRobot {
 
     }
 
-    /* istanbul ignore next */
     dummy(): void { }
 
 }
