@@ -108,5 +108,8 @@
   },
   "watchOptions": {
     "excludeDirectories": ["node_modules", "dist"]
-  }
+  },
+  "exclude": [
+    "node_modules", "webpack.config.ts", "jest.config.ts"
+  ]
 }
