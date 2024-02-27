@@ -34,13 +34,8 @@ class PlaceCommand implements ICommand {
         this.position = position;
     }
 
-    public getPosition(): Position {
-        return this.position;
-    }
-
     execute(robot: IRobot): boolean {
-        robot.dummy();
-        return false;
+        return robot.place(this.position);
     }
 }
 

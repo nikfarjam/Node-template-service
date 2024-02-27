@@ -4,28 +4,48 @@ import * as fs from 'fs';
 import { createCommandOrUndefined } from './utils/CommandFactory';
 import { ICommand, ReportCommand } from './command/Command';
 import { Board, IBoard } from './board/Board';
-import { Position } from './model/Model';
+import { Direction, Position } from './model/Model';
+import { IRobot, Robot } from './robot/Robot';
 
 const debug = Debug('app:debug');
-const error = Debug('app:error');
+const warn = Debug('app:warn');
 
-const filePath = '/workspaces/Node-template-service/data/sample1.txt';
+/*
+TODO: 
+1- Move param init to out of App class
+2- Move robot creation to App
 
+*/
 class App {
 
-    async runBoard() {
-        if (!fs.existsSync(filePath)) {
-            throw new Error('File not found');
-        }
+    private filePath: string;
+    private rows: number;
+    private columns: number;
+    
+    constructor() {
+        this.filePath = process.env.COMMAND_FILE ?? '';
+        this.columns = Number.parseInt(process.env.BOARD_COLUMNS ?? '0');
+        this.rows = Number.parseInt(process.env.BOARD_ROWS ?? '0');
+    }
 
-        const fileStream = fs.createReadStream(filePath);
+    async runBoard() {
+        if (!fs.existsSync(this.filePath)) {
+            throw new Error(`File not found ${this.filePath}`);
+        } else fs.access(this.filePath, fs.constants.R_OK, err => {
+            if (err) {
+                throw new Error(`${this.filePath} is not readable`);
+            }
+        })
+
+        const fileStream = fs.createReadStream(this.filePath);
 
         const rl = createInterface({
             input: fileStream,
             crlfDelay: Infinity
         });
 
-        const board: IBoard = new Board(5, 5);
+        const board: IBoard = new Board(this.rows, this.columns);
+        const robot: IRobot = new Robot(board);
 
         for await (const line of rl) {
             const command = createCommandOrUndefined(line);
@@ -39,7 +59,7 @@ class App {
                     success = board.runCommand(command);
                 }
             } else {            
-                error(`Command for '${line}' is not valid`);
+                warn(`Command for '${line}' is not valid`);
             }
             debug(`Command: ${line} is ${success ? '' : 'NOT'} successful`);
         }

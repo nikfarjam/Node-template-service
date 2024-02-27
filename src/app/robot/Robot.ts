@@ -1,8 +1,13 @@
 import { IPositionValidator } from "../board/Board";
 import { Direction, Position } from "../model/Model";
+import Debug from 'debug';
+
+const debug = Debug('robot:debug');
 
 interface IRobot {
-    getPosition(): Position;
+    place(position: Position): boolean;
+
+    getPosition(): Position | undefined;
 
     rotateLeft(): void;
 
@@ -15,33 +20,61 @@ interface IRobot {
 
 class Robot implements IRobot {
 
-    private position: Position;
+    private position: Position | undefined;
     private validator: IPositionValidator;
     private directions: Direction[];
 
-    constructor(position: Position, validator: IPositionValidator) {
-        this.position = position;
+    constructor(validator: IPositionValidator) {
         this.validator = validator;
+        this.validator.addRobot(this);
         this.directions = [Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST];
     }
 
-    getPosition(): Position {
+    place(position: Position): boolean {
+        if (this.position) {
+            return false;
+        }
+       return this.updatePosition(position);
+    }
+
+    private updatePosition(position: Position): boolean {
+        if (!position) {
+            return false;
+        }
+        if(this.validator.isAllowed(position)){
+            this.position = position;
+            debug(`Robot postion [row = ${position.getRow()}, column = ${position.getColumn()}, facing = ${position.getFacing()}}]`);
+            return true;
+        }
+        return false;
+    }
+
+    getPosition(): Position | undefined {
         return this.position;
     }
 
     rotateLeft(): void {
-        const facingIndex = this.directions.findIndex((item) => this.position.getFacing() === item);
+        if (!this.position) {
+            return;
+        }
+        const facingIndex = this.directions.findIndex((item) => this.position?.getFacing() === item);
         const newFacingIndex = (facingIndex - 1) < 0 ? this.directions.length - 1 : facingIndex - 1;
-        this.position = new Position(this.position.getRow(), this.position.getColumn(), this.directions[newFacingIndex]);
+        this.updatePosition(new Position(this.position.getRow(), this.position.getColumn(), this.directions[newFacingIndex]));
     }
 
     rotateRight(): void {
-        const facingIndex = this.directions.findIndex((item) => this.position.getFacing() === item);
+        if (!this.position) {
+            return;
+        }
+        const facingIndex = this.directions.findIndex((item) => this.position?.getFacing() === item);
         const newFacingIndex = (facingIndex + 1) === this.directions.length ? 0 : facingIndex + 1;
-        this.position = new Position(this.position.getRow(), this.position.getColumn(), this.directions[newFacingIndex]);
+        this.updatePosition(new Position(this.position.getRow(), this.position.getColumn(), this.directions[newFacingIndex]));
     }
 
     move(): boolean {
+        if (!this.position) {
+            return false;
+        }
         let newPosition;
         switch (this.position.getFacing()) {
             case Direction.NORTH: newPosition = new Position(
@@ -69,15 +102,13 @@ class Robot implements IRobot {
                 break;
         }
 
-        if (newPosition && this.validator.isAllowed(newPosition)) {
-            this.position = newPosition;
-            return true;
-        }
-        return false;
-
+        return this.updatePosition(newPosition);
     }
 
-    dummy(): void { }
+    /**
+     * Object orinented boilerplate
+     */
+    dummy() {}
 
 }
 

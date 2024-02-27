@@ -38,7 +38,7 @@ describe('Command Factory test suite', () => {
         { input: 'PLACE 2,3,EAST', expected: new PlaceCommand(new Position(3, 2, Direction.EAST)) },
         { input: 'place 2,3,west', expected: new PlaceCommand(new Position(3, 2, Direction.WEST)) },
         { input: ' PLACE   2 , 3 , EAST ', expected: new PlaceCommand(new Position(3, 2, Direction.EAST)) },
-        { input: 'PLACE 1,2,NORTH', expected: new PlaceCommand(new Position(2, 1, Direction.NORTH)) },
+        { input: 'PLACE 1,2,SOUTH', expected: new PlaceCommand(new Position(2, 1, Direction.SOUTH)) },
 
     ])('createCommandOrUndefined of "$input" should be instance of $expected', ({ input, expected }) => {
         const actual = createCommandOrUndefined(input);
@@ -53,6 +53,8 @@ describe('Command Factory test suite', () => {
         { input: 'place,1.2,3.14' },
         { input: '#' },
         { input: 'PLACE -1,-4,SOUTH' },
+        { input: '' },
+        { input: '  ' },
 
     ])('createCommandOrUndefined should return undefined for $input', ({ input }) => {
         const actual = createCommandOrUndefined(input);

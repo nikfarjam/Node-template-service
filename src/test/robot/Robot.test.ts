@@ -5,48 +5,53 @@ import { Robot } from '../../app/robot/Robot';
 describe('Robot test suite', () => {
 
     let mockValidator: IPositionValidator;
+    let robot: Robot;
 
     beforeEach(() => {
         mockValidator = {
-            isAllowed: () => true
+            isAllowed: () => true,
+            addRobot: () => true
         };
+        robot = new Robot(mockValidator);
     });
 
     it('should report position', () => {
         const position = new Position(1, 3, Direction.EAST);
-        const robot = new Robot(position, mockValidator);
+        robot.place(position);
 
         expect(robot.getPosition()).toStrictEqual(position);
     })
 
     it('should rotate left', () => {
         const position = new Position(1, 3, Direction.EAST);
-        const robot = new Robot(position, mockValidator);
+        robot.place(position);
 
-        expect(robot.getPosition().getFacing()).toBe(Direction.EAST);
+        expect(robot.getPosition()).toBeDefined();
+        expect(robot.getPosition()?.getFacing()).toBe(Direction.EAST);
         robot.rotateLeft();
-        expect(robot.getPosition().getFacing()).toBe(Direction.NORTH);
+        expect(robot.getPosition()?.getFacing()).toBe(Direction.NORTH);
         robot.rotateLeft();
-        expect(robot.getPosition().getFacing()).toBe(Direction.WEST);
+        expect(robot.getPosition()?.getFacing()).toBe(Direction.WEST);
         robot.rotateLeft();
-        expect(robot.getPosition().getFacing()).toBe(Direction.SOUTH);
+        expect(robot.getPosition()?.getFacing()).toBe(Direction.SOUTH);
         robot.rotateLeft();
-        expect(robot.getPosition().getFacing()).toBe(Direction.EAST);
+        expect(robot.getPosition()?.getFacing()).toBe(Direction.EAST);
     })
 
     it('should rotate right', () => {
         const position = new Position(1, 3, Direction.EAST);
-        const robot = new Robot(position, mockValidator);
+        robot.place(position);
 
-        expect(robot.getPosition().getFacing()).toBe(Direction.EAST);
+        expect(robot.getPosition()).toBeDefined();
+        expect(robot.getPosition()?.getFacing()).toBe(Direction.EAST);
         robot.rotateRight();
-        expect(robot.getPosition().getFacing()).toBe(Direction.SOUTH);
+        expect(robot.getPosition()?.getFacing()).toBe(Direction.SOUTH);
         robot.rotateRight();
-        expect(robot.getPosition().getFacing()).toBe(Direction.WEST);
+        expect(robot.getPosition()?.getFacing()).toBe(Direction.WEST);
         robot.rotateRight();
-        expect(robot.getPosition().getFacing()).toBe(Direction.NORTH);
+        expect(robot.getPosition()?.getFacing()).toBe(Direction.NORTH);
         robot.rotateRight();
-        expect(robot.getPosition().getFacing()).toBe(Direction.EAST);
+        expect(robot.getPosition()?.getFacing()).toBe(Direction.EAST);
     })
 
     it.each([
@@ -56,7 +61,7 @@ describe('Robot test suite', () => {
         { input: new Position(1, 3, Direction.SOUTH), expected: new Position(0, 3, Direction.SOUTH) },
 
     ])('Robot at $input must move to $expected when new position is allowed', ({ input, expected }) => {
-        const robot = new Robot(input, mockValidator);
+        robot.place(input);
 
         const actual = robot.move();
 
@@ -72,14 +77,23 @@ describe('Robot test suite', () => {
 
     ])('Robot at $input must stop when new position is NOT allowed', ({ input }) => {
         mockValidator = {
-            isAllowed: () => false
+            isAllowed: (p: Position) => p === input,
+            addRobot: () => true
         };
-        const robot = new Robot(input, mockValidator);
+        const robot = new Robot(mockValidator);
+        robot.place(input);
 
         const actual = robot.move();
 
         expect(actual).toBeFalsy();
         expect(robot.getPosition()).toStrictEqual(input);
     });
+
+    it('should ignore commands before placeing in a position', () => {
+        expect(robot.move()).toBeFalsy();
+        expect(robot.rotateLeft()).toBeFalsy();
+        expect(robot.rotateRight()).toBeFalsy();
+        expect(robot.getPosition()).toBeFalsy();
+    })
 
 });

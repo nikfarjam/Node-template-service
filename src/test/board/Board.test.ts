@@ -2,14 +2,22 @@
 import { Board, IBoard } from '../../app/board/Board';
 import { LeftCommand, MoveCommand, PlaceCommand, ReportCommand, RightCommand } from '../../app/command/Command';
 import { Direction, Position } from '../../app/model/Model';
+import { IRobot, Robot } from '../../app/robot/Robot';
 
 describe('Board test suite', () => {
 
-    describe('Board diminsion', () => {
+    describe('Board', () => {
 
         it('should throw error when number of rows is negetive', () => {
             function expectError() {
                 new Board(-1, 10);
+            }
+            expect(expectError).toThrow();
+        })
+
+        it('should throw error when number of rows is NaN', () => {
+            function expectError() {
+                new Board(Number.NaN, 10);
             }
             expect(expectError).toThrow();
         })
@@ -21,8 +29,24 @@ describe('Board test suite', () => {
             expect(expectError).toThrow();
         })
 
+        it('should throw error when number of columns is NaN', () => {
+            function expectError() {
+                new Board(10, NaN);
+            }
+            expect(expectError).toThrow();
+        })
+
         it('should NOT throw error when number of rows and columns are positive', () => {
             new Board(2, 3);
+        })
+
+        it('should have only and only one robot', ()=> {
+            const board = new Board(2,3);
+            const firstRobot :IRobot = {} as IRobot;
+            const secondRobot :IRobot = {} as IRobot;
+
+            expect(board.addRobot(firstRobot)).toBeTruthy();
+            expect(board.addRobot(secondRobot)).toBeFalsy();
         })
     })
 
@@ -64,9 +88,11 @@ describe('Board test suite', () => {
         const rows = 3;
         const columns = 4;
         let board: IBoard;
+        let robot: IRobot;
 
         beforeEach(() => {
             board = new Board(rows, columns);
+            robot = new Robot(board);
         })
 
         it('should have no robot at the begning', () => {
@@ -98,9 +124,11 @@ describe('Board test suite', () => {
         const columns = 4;
         let initPosition: Position;
         let board: IBoard;
+        let robot: IRobot;
 
         beforeEach(() => {
             board = new Board(rows, columns);
+            robot = new Robot(board);
             initPosition = new Position(1, 2, Direction.EAST);
             board.runCommand(new PlaceCommand(initPosition));
         })
@@ -126,6 +154,19 @@ describe('Board test suite', () => {
             expect(board.getRobotPosition()).toStrictEqual(new Position(1, 3, Direction.EAST));
         })
 
+        it('should ignore commands until the first PLACE command', ()=> {
+            board = new Board(rows, columns);
+            robot = new Robot(board);
+
+            expect(board.runCommand(new MoveCommand())).toBeFalsy();
+            expect(board.runCommand(new LeftCommand())).toBeFalsy();
+            expect(board.runCommand(new RightCommand())).toBeFalsy();
+            expect(board.runCommand(new MoveCommand())).toBeFalsy();
+            expect(board.runCommand(new ReportCommand())).toBeFalsy();
+
+            expect(board.runCommand(new PlaceCommand(initPosition))).toBeTruthy();
+        })
+
     })
 
     describe('Invalid commands and edge senarios', () => {
@@ -134,9 +175,11 @@ describe('Board test suite', () => {
         const columns = 3;
         let initPosition: Position;
         let board: IBoard;
+        let robot: IRobot;
 
         beforeEach(() => {
             board = new Board(rows, columns);
+            robot = new Robot(board);
             initPosition = new Position(1, 2, Direction.EAST);
             board.runCommand(new PlaceCommand(initPosition));
         })

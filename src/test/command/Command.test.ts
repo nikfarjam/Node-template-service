@@ -12,6 +12,7 @@ describe('Command test suite', () => {
             getPosition: jest.fn().mockReturnValue(new Position(2, 3, Direction.NORTH)),
             rotateRight: jest.fn(),
             move: jest.fn().mockReturnValue(true),
+            place: jest.fn(),
             dummy: () => { }
         };
     });
