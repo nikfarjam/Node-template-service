@@ -96,4 +96,26 @@ describe('Robot test suite', () => {
         expect(robot.getPosition()).toBeFalsy();
     })
 
+    it('should support mulitiple place', () => {
+        let position = new Position(1, 2, Direction.NORTH);
+
+        expect(robot.place(position)).toBeTruthy();
+        expect(robot.getPosition()).toStrictEqual(position);
+
+        position = new Position(3, 4, Direction.EAST);
+
+        expect(robot.place(position)).toBeTruthy();
+        expect(robot.getPosition()).toStrictEqual(position);
+
+        position = new Position(10, 20, Direction.WEST);
+
+        expect(robot.place(position)).toBeTruthy();
+        expect(robot.getPosition()).toStrictEqual(position);
+
+        position = new Position(23, 20, Direction.SOUTH);
+
+        expect(robot.place(position)).toBeTruthy();
+        expect(robot.getPosition()).toStrictEqual(position);
+    })
+
 });

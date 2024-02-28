@@ -1,5 +1,5 @@
 import { Position } from "../model/Model";
-import { IRobot, Robot } from "../robot/Robot";
+import { IRobot } from "../robot/Robot";
 import { ICommand, PlaceCommand } from "../command/Command";
 import Debug from 'debug';
 

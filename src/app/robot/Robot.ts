@@ -31,17 +31,11 @@ class Robot implements IRobot {
     }
 
     place(position: Position): boolean {
-        if (this.position) {
-            return false;
-        }
-       return this.updatePosition(position);
+        return this.updatePosition(position);
     }
 
     private updatePosition(position: Position): boolean {
-        if (!position) {
-            return false;
-        }
-        if(this.validator.isAllowed(position)){
+        if (this.validator.isAllowed(position)) {
             this.position = position;
             debug(`Robot postion [row = ${position.getRow()}, column = ${position.getColumn()}, facing = ${position.getFacing()}}]`);
             return true;
@@ -108,7 +102,7 @@ class Robot implements IRobot {
     /**
      * Object orinented boilerplate
      */
-    dummy() {}
+    dummy() { }
 
 }
 

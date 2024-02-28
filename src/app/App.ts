@@ -1,76 +1,89 @@
 import Debug from 'debug';
-import { createInterface } from 'readline';
-import * as fs from 'fs';
 import { createCommandOrUndefined } from './utils/CommandFactory';
-import { ICommand, ReportCommand } from './command/Command';
+import { ReportCommand } from './command/Command';
 import { Board, IBoard } from './board/Board';
-import { Direction, Position } from './model/Model';
-import { IRobot, Robot } from './robot/Robot';
+import { Position } from './model/Model';
+import { Robot } from './robot/Robot';
+import { fileReader } from './input/CommandReader'
+import { Readable } from 'stream';
+import { IReporter, ConsoleReporter } from './output/Reporter';
+import { showErrorMessage } from './utils/Console';
 
 const debug = Debug('app:debug');
 const warn = Debug('app:warn');
 
-/*
-TODO: 
-1- Move param init to out of App class
-2- Move robot creation to App
-
-*/
 class App {
 
-    private filePath: string;
-    private rows: number;
-    private columns: number;
-    
-    constructor() {
-        this.filePath = process.env.COMMAND_FILE ?? '';
-        this.columns = Number.parseInt(process.env.BOARD_COLUMNS ?? '0');
-        this.rows = Number.parseInt(process.env.BOARD_ROWS ?? '0');
+    private board: IBoard;
+    private commandStream: Readable;
+    private reporters: IReporter[];
+
+    constructor(board: IBoard, commandStream: Readable, reporters: IReporter[]) {
+        this.board = board;
+        this.commandStream = commandStream;
+        this.reporters = reporters;
     }
 
     async runBoard() {
-        if (!fs.existsSync(this.filePath)) {
-            throw new Error(`File not found ${this.filePath}`);
-        } else fs.access(this.filePath, fs.constants.R_OK, err => {
-            if (err) {
-                throw new Error(`${this.filePath} is not readable`);
-            }
-        })
-
-        const fileStream = fs.createReadStream(this.filePath);
-
-        const rl = createInterface({
-            input: fileStream,
-            crlfDelay: Infinity
-        });
-
-        const board: IBoard = new Board(this.rows, this.columns);
-        const robot: IRobot = new Robot(board);
-
-        for await (const line of rl) {
-            const command = createCommandOrUndefined(line);
-            let success = false;
-            if (command) {
-                if (this.isReport(command)) {
-                    const position: Position | undefined = board.getRobotPosition();
-                    console.log(`Output: ${position?.getColumn()},${position?.getRow()},${position?.getFacing()}`);
-                    success = true;
+        try {
+            for await (const line of this.commandStream) {
+                const command = createCommandOrUndefined(line);
+                if (!command) {
+                    warn(`Command '${line}' is not valid`);
+                } else if (command instanceof ReportCommand) {
+                    this.reportPosition(this.board);
                 } else {
-                    success = board.runCommand(command);
+                    const success = this.board.runCommand(command);
+                    debug(`Command: ${line} is ${success ? '' : 'NOT'} successful`);
                 }
-            } else {            
-                warn(`Command for '${line}' is not valid`);
             }
-            debug(`Command: ${line} is ${success ? '' : 'NOT'} successful`);
+        } catch (err) {
+            if (err instanceof Error) {
+                showErrorMessage(err.message);
+            } else {
+                showErrorMessage('General error');
+            }
         }
-        debug('Finish');
     }
 
-    isReport(command: ICommand) {
-        return command instanceof ReportCommand;
+    reportPosition(board: IBoard) {
+        const position: Position | undefined = board.getRobotPosition();
+        for (const r of this.reporters) {
+            r.report(position);
+        }
     }
 
 }
 
-const app = new App();
-app.runBoard();
+const DEFAULT_ROWS = 5;
+const DEFAULT_COLUMNS = 5;
+const COMMAND_INPUT = 'FILE';
+
+const filePath = process.env.COMMAND_FILE ?? '';
+const columns = process.env.BOARD_COLUMNS && Number.parseInt(process.env.BOARD_COLUMNS) ? Number.parseInt(process.env.BOARD_COLUMNS) : DEFAULT_COLUMNS;
+const rows = process.env.BOARD_ROWS && Number.parseInt(process.env.BOARD_ROWS) ? Number.parseInt(process.env.BOARD_ROWS) : DEFAULT_ROWS;
+
+function createCommandStream(): Readable {
+    if (COMMAND_INPUT === 'FILE') {
+        return fileReader(filePath);
+    }
+    return fileReader(filePath);
+}
+
+try {
+    const board: IBoard = new Board(rows, columns);
+    new Robot(board);
+    const cammandStream = createCommandStream();
+    const reporters = [new ConsoleReporter(process.stdout)];
+
+    const app = new App(board, cammandStream, reporters);
+    app.runBoard();
+} catch (err) {
+    if (err instanceof Error) {
+        showErrorMessage(err.message);
+    } else {
+        showErrorMessage('General error');
+    }
+}
+
+export default App;
