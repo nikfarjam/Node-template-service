@@ -2,6 +2,10 @@
 
 This **NodeJS/Typescript** project contains source code and all required resource for a coding challenge simulating a toy robot moving on a square tabletop of dimensions 5 units x 5 units.
 
+# Description
+
+This application reads commands from a text file and print the result on the console. The application exists after reading and executing all commands in the file. The application is able to ignore spaces around each command and commands that doesn't match with (PLACE X,Y,F|MOVE|LEFT|RIGHT|REPORT). You can add # charachter at the begining of each line to make it comment.
+
 # Prerequisites
 
 [NodeJS and NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) is the only requirement to run this application.
@@ -84,16 +88,3 @@ mkdir -p dist
 npm run build
 node --env-file=config.env ./dist/main.js
 ```
-
-It ignores any text except valid commands, ingore with spaces, case insensitive, we can have comments by adding # at the beging of the line
-Support comments in the file
-
-
-This program is a sample of a wide verity of Object-Oriented Design Patterns including
-
-Command
-Factory
-Abstract Factory
-Strategy
-Iterator
-Null Object
