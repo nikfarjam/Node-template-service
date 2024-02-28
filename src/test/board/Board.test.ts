@@ -88,24 +88,14 @@ describe('Board test suite', () => {
         const rows = 3;
         const columns = 4;
         let board: IBoard;
-        let robot: IRobot;
 
         beforeEach(() => {
             board = new Board(rows, columns);
-            robot = new Robot(board);
+            new Robot(board);
         })
 
         it('should have no robot at the begning', () => {
             expect(board.getRobotPosition()).toBeUndefined();
-        })
-
-        it('should add robot by place command', () => {
-            const initPosition = new Position(0, 0, Direction.EAST);
-
-            const success = board.runCommand(new PlaceCommand(initPosition));
-
-            expect(success).toBeTruthy();
-            expect(board.getRobotPosition()).toStrictEqual(initPosition);
         })
 
         it('should NOT add robot when place command is NOT allowed', () => {
@@ -117,6 +107,20 @@ describe('Board test suite', () => {
             expect(board.getRobotPosition()).toBeUndefined();
         })
 
+        it('should support multiple PLACE commands', () => {
+            let newPosition = new Position(1, 1, Direction.NORTH);
+            let success = board.runCommand(new PlaceCommand(newPosition));
+
+            expect(success).toBeTruthy();
+            expect(board.getRobotPosition()).toStrictEqual(newPosition);
+
+            newPosition = new Position(2, 3, Direction.SOUTH);
+            success = board.runCommand(new PlaceCommand(newPosition));
+
+            expect(success).toBeTruthy();
+            expect(board.getRobotPosition()).toStrictEqual(newPosition);
+        })
+
     })
 
     describe('Robot commands', () => {
@@ -124,11 +128,10 @@ describe('Board test suite', () => {
         const columns = 4;
         let initPosition: Position;
         let board: IBoard;
-        let robot: IRobot;
 
         beforeEach(() => {
             board = new Board(rows, columns);
-            robot = new Robot(board);
+            new Robot(board);
             initPosition = new Position(1, 2, Direction.EAST);
             board.runCommand(new PlaceCommand(initPosition));
         })
@@ -156,7 +159,7 @@ describe('Board test suite', () => {
 
         it('should ignore commands until the first PLACE command', ()=> {
             board = new Board(rows, columns);
-            robot = new Robot(board);
+            new Robot(board);
 
             expect(board.runCommand(new MoveCommand())).toBeFalsy();
             expect(board.runCommand(new LeftCommand())).toBeFalsy();
@@ -175,11 +178,10 @@ describe('Board test suite', () => {
         const columns = 3;
         let initPosition: Position;
         let board: IBoard;
-        let robot: IRobot;
 
         beforeEach(() => {
             board = new Board(rows, columns);
-            robot = new Robot(board);
+            new Robot(board);
             initPosition = new Position(1, 2, Direction.EAST);
             board.runCommand(new PlaceCommand(initPosition));
         })
@@ -188,13 +190,6 @@ describe('Board test suite', () => {
             initPosition = new Position(1, 2, Direction.EAST);
             board.runCommand(new PlaceCommand(initPosition));
             const success = board.runCommand(new MoveCommand());
-
-            expect(success).toBeFalsy();
-            expect(board.getRobotPosition()).toStrictEqual(initPosition);
-        })
-
-        it('should ignore PLACE commands, after the first PLACE', () => {
-            const success = board.runCommand(new PlaceCommand(new Position(1, 1, Direction.NORTH)));
 
             expect(success).toBeFalsy();
             expect(board.getRobotPosition()).toStrictEqual(initPosition);

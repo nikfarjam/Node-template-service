@@ -9,6 +9,7 @@
     "lint": "npx eslint src/**/*",
     "start": "node -r ts-node/register --env-file=config.env ./src/app/App.ts",
     "test": "jest --config jest.config.ts",
+    "test-integration": "jest --config itest.config.ts",
     "test-watch": "jest --watch --config jest.config.ts",
     "build": "webpack"
   },
