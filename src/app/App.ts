@@ -55,13 +55,12 @@ class App {
 
 }
 
-const DEFAULT_ROWS = 5;
 const DEFAULT_COLUMNS = 5;
 const COMMAND_INPUT = 'FILE';
 
-const filePath = process.env.COMMAND_FILE ?? '';
-const columns = process.env.BOARD_COLUMNS && Number.parseInt(process.env.BOARD_COLUMNS) ? Number.parseInt(process.env.BOARD_COLUMNS) : DEFAULT_COLUMNS;
-const rows = process.env.BOARD_ROWS && Number.parseInt(process.env.BOARD_ROWS) ? Number.parseInt(process.env.BOARD_ROWS) : DEFAULT_ROWS;
+const filePath = process.env.COMMAND_FILE ?? (process.argv.length > 2) ? process.argv[2] : '';
+const columns = process.env.BOARD_SIZE && Number.parseInt(process.env.BOARD_SIZE) ? Number.parseInt(process.env.BOARD_SIZE) : DEFAULT_COLUMNS;
+const rows = columns;
 
 function createCommandStream(): Readable {
     if (COMMAND_INPUT === 'FILE') {

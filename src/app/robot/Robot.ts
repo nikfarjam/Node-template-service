@@ -24,6 +24,14 @@ class Robot implements IRobot {
     private validator: IPositionValidator;
     private directions: Direction[];
 
+    /**
+     * Robot without a Board is not able to do anything
+     * Therefore I use constructor to force to use Robot with the Board
+     * @param validator A reference to the Board that Robot uses 
+     * 1. To add itself to the board
+     * 2. To check if robot can move/place to a position
+     * 
+     */
     constructor(validator: IPositionValidator) {
         this.validator = validator;
         this.validator.addRobot(this);
