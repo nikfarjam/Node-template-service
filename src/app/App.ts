@@ -55,18 +55,29 @@ class App {
 
 }
 
-const DEFAULT_COLUMNS = 5;
+const DEFAULT_SIZE = 5;
 const COMMAND_INPUT = 'FILE';
 
-const filePath = process.env.COMMAND_FILE ?? (process.argv.length > 2) ? process.argv[2] : '';
-const columns = process.env.BOARD_SIZE && Number.parseInt(process.env.BOARD_SIZE) ? Number.parseInt(process.env.BOARD_SIZE) : DEFAULT_COLUMNS;
+const columns = process.env.BOARD_SIZE && Number.parseInt(process.env.BOARD_SIZE) ? Number.parseInt(process.env.BOARD_SIZE) : DEFAULT_SIZE;
 const rows = columns;
+
+function getInputFilePath(): string {
+    if (process.argv.length > 2 && process.argv[2]) {
+        return process.argv[2];
+    }
+    if (process.env.COMMAND_FILE) {
+        return process.env.COMMAND_FILE;
+    }
+    throw new Error(`Input file is missed
+    You can pass it as applicaltion arg like 'node main.js data.txt'
+    Or as environment variable like 'COMMAND_FILE=data.txt node main.js'`);
+}
 
 function createCommandStream(): Readable {
     if (COMMAND_INPUT === 'FILE') {
-        return fileReader(filePath);
+        return fileReader(getInputFilePath());
     }
-    return fileReader(filePath);
+    return fileReader(getInputFilePath());
 }
 
 try {
