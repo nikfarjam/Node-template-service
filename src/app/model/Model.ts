@@ -1,26 +1,7 @@
-class Position {
-    private row: number;
-    private column: number;
-    private facing: Direction;
-
-    constructor(row: number, column: number, facing: Direction) {
-        this.row = row;
-        this.column = column;
-        this.facing = facing;
-    }
-
-    getRow(): number {
-        return this.row;
-    }
-
-    getColumn(): number {
-        return this.column;
-    }
-
-    getFacing(): Direction {
-        return this.facing;
-    }
-
+interface Position {
+    readonly column: number;
+    readonly row: number;
+    readonly facing: Direction;
 }
 
 enum Direction {

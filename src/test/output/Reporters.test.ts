@@ -31,9 +31,9 @@ describe('Reporter test suite', () => {
         })
 
         it('should write position', () => {
-            reporter.report(new Position(2,3,Direction.SOUTH));
+            reporter.report({ column: 2, row: 3, facing: Direction.SOUTH });
 
-            expect(bucket).toContain('Output: 3,2,SOUTH\n');
+            expect(bucket).toContain('Output: 2,3,SOUTH\n');
             expect(bucket.length).toBe(1);
         })
     })

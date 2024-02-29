@@ -19,7 +19,7 @@ class ConsoleReporter implements IReporter {
         if (!position) {
             this.writeable.write(this.EMPTY_BOARD);
         } else {
-            this.writeable.write(`Output: ${position.getColumn()},${position.getRow()},${position.getFacing()}\n`);
+            this.writeable.write(`Output: ${position.column},${position.row},${position.facing}\n`);
         }
     }
 

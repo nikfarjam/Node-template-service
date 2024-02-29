@@ -85,7 +85,7 @@ describe('App suit tests', () => {
 
         report(position: Position) {
             if (position) {
-                this.bucket.push(`${position.getColumn()},${position.getRow()},${position.getFacing()}`);
+                this.bucket.push(`${position.column},${position.row},${position.facing}`);
             }
         }
     }

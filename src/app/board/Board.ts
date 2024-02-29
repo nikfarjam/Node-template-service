@@ -56,10 +56,10 @@ class Board implements IBoard {
     }
 
     isAllowed(position: Position): boolean {
-        if (position.getRow() < 0 || position.getRow() >= this.rows) {
+        if (position.row < 0 || position.row >= this.rows) {
             return false;
         }
-        if (position.getColumn() < 0 || position.getColumn() >= this.columns) {
+        if (position.column < 0 || position.column >= this.columns) {
             return false;
         }
         return true;

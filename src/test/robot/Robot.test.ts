@@ -16,49 +16,49 @@ describe('Robot test suite', () => {
     });
 
     it('should report position', () => {
-        const position = new Position(1, 3, Direction.EAST);
+        const position = { row: 3, column: 1, facing: Direction.EAST };
         robot.place(position);
 
         expect(robot.getPosition()).toStrictEqual(position);
     })
 
     it('should rotate left', () => {
-        const position = new Position(1, 3, Direction.EAST);
+        const position = { row: 1, column: 3, facing: Direction.EAST };
         robot.place(position);
 
         expect(robot.getPosition()).toBeDefined();
-        expect(robot.getPosition()?.getFacing()).toBe(Direction.EAST);
+        expect(robot.getPosition()?.facing).toBe(Direction.EAST);
         robot.rotateLeft();
-        expect(robot.getPosition()?.getFacing()).toBe(Direction.NORTH);
+        expect(robot.getPosition()?.facing).toBe(Direction.NORTH);
         robot.rotateLeft();
-        expect(robot.getPosition()?.getFacing()).toBe(Direction.WEST);
+        expect(robot.getPosition()?.facing).toBe(Direction.WEST);
         robot.rotateLeft();
-        expect(robot.getPosition()?.getFacing()).toBe(Direction.SOUTH);
+        expect(robot.getPosition()?.facing).toBe(Direction.SOUTH);
         robot.rotateLeft();
-        expect(robot.getPosition()?.getFacing()).toBe(Direction.EAST);
+        expect(robot.getPosition()?.facing).toBe(Direction.EAST);
     })
 
     it('should rotate right', () => {
-        const position = new Position(1, 3, Direction.EAST);
+        const position = { row: 3, column: 1, facing: Direction.EAST };
         robot.place(position);
 
         expect(robot.getPosition()).toBeDefined();
-        expect(robot.getPosition()?.getFacing()).toBe(Direction.EAST);
+        expect(robot.getPosition()?.facing).toBe(Direction.EAST);
         robot.rotateRight();
-        expect(robot.getPosition()?.getFacing()).toBe(Direction.SOUTH);
+        expect(robot.getPosition()?.facing).toBe(Direction.SOUTH);
         robot.rotateRight();
-        expect(robot.getPosition()?.getFacing()).toBe(Direction.WEST);
+        expect(robot.getPosition()?.facing).toBe(Direction.WEST);
         robot.rotateRight();
-        expect(robot.getPosition()?.getFacing()).toBe(Direction.NORTH);
+        expect(robot.getPosition()?.facing).toBe(Direction.NORTH);
         robot.rotateRight();
-        expect(robot.getPosition()?.getFacing()).toBe(Direction.EAST);
+        expect(robot.getPosition()?.facing).toBe(Direction.EAST);
     })
 
     it.each([
-        { input: new Position(1, 3, Direction.EAST), expected: new Position(1, 4, Direction.EAST) },
-        { input: new Position(1, 3, Direction.WEST), expected: new Position(1, 2, Direction.WEST) },
-        { input: new Position(1, 3, Direction.NORTH), expected: new Position(2, 3, Direction.NORTH) },
-        { input: new Position(1, 3, Direction.SOUTH), expected: new Position(0, 3, Direction.SOUTH) },
+        { input: { row: 3, column: 1, facing: Direction.EAST }, expected: { row: 3, column: 2, facing: Direction.EAST } },
+        { input: { row: 3, column: 1, facing: Direction.WEST }, expected: { row: 3, column: 0, facing: Direction.WEST } },
+        { input: { row: 3, column: 1, facing: Direction.NORTH }, expected: { row: 4, column: 1, facing: Direction.NORTH } },
+        { input: { row: 3, column: 1, facing: Direction.SOUTH }, expected: { row: 2, column: 1, facing: Direction.SOUTH } },
 
     ])('Robot at $input must move to $expected when new position is allowed', ({ input, expected }) => {
         robot.place(input);
@@ -70,10 +70,10 @@ describe('Robot test suite', () => {
     });
 
     it.each([
-        { input: new Position(1, 3, Direction.EAST) },
-        { input: new Position(1, 3, Direction.WEST) },
-        { input: new Position(1, 3, Direction.NORTH) },
-        { input: new Position(1, 3, Direction.SOUTH) },
+        { input: { row: 3, column: 1, facing: Direction.EAST } },
+        { input: { row: 3, column: 1, facing: Direction.WEST } },
+        { input: { row: 3, column: 1, facing: Direction.NORTH } },
+        { input: { row: 3, column: 1, facing: Direction.SOUTH } },
 
     ])('Robot at $input must stop when new position is NOT allowed', ({ input }) => {
         mockValidator = {
@@ -97,22 +97,22 @@ describe('Robot test suite', () => {
     })
 
     it('should support mulitiple place', () => {
-        let position = new Position(1, 2, Direction.NORTH);
+        let position = { row: 2, column: 1, facing: Direction.NORTH };
 
         expect(robot.place(position)).toBeTruthy();
         expect(robot.getPosition()).toStrictEqual(position);
 
-        position = new Position(3, 4, Direction.EAST);
+        position = { row: 4, column: 3, facing: Direction.EAST };
 
         expect(robot.place(position)).toBeTruthy();
         expect(robot.getPosition()).toStrictEqual(position);
 
-        position = new Position(10, 20, Direction.WEST);
+        position = { row: 20, column: 10, facing: Direction.WEST };
 
         expect(robot.place(position)).toBeTruthy();
         expect(robot.getPosition()).toStrictEqual(position);
 
-        position = new Position(23, 20, Direction.SOUTH);
+        position = { row: 23, column: 20, facing: Direction.SOUTH };
 
         expect(robot.place(position)).toBeTruthy();
         expect(robot.getPosition()).toStrictEqual(position);

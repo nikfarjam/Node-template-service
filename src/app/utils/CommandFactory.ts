@@ -13,7 +13,7 @@ function createCommandOrUndefined(cmd: string): ICommand | undefined {
     if (!cmd) {
         return undefined;
     }
-    const command = cmd.replaceAll(/^\s+|\s+$/g,'').toLocaleUpperCase();
+    const command = cmd.replaceAll(/^\s+|\s+$/g, '').toLocaleUpperCase();
 
     switch (command) {
         case 'MOVE': return MOVE;
@@ -29,7 +29,7 @@ function createCommandOrUndefined(cmd: string): ICommand | undefined {
         const column = Number.parseInt(place[1]);
         const row = Number.parseInt(place[2]);
         if (direction && Number.isInteger(row) && Number.isInteger(column)) {
-            return new PlaceCommand(new Position(row, column, direction));
+            return new PlaceCommand({ row, column, facing: direction });
         }
     }
     return undefined;

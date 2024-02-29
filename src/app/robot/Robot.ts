@@ -45,7 +45,7 @@ class Robot implements IRobot {
     private updatePosition(position: Position): boolean {
         if (this.validator.isAllowed(position)) {
             this.position = position;
-            debug(`Robot postion [row = ${position.getRow()}, column = ${position.getColumn()}, facing = ${position.getFacing()}}]`);
+            debug(`Robot postion [row = ${position.row}, column = ${position.column}, facing = ${position.facing}}]`);
             return true;
         }
         return false;
@@ -59,18 +59,24 @@ class Robot implements IRobot {
         if (!this.position) {
             return;
         }
-        const facingIndex = this.directions.findIndex((item) => this.position?.getFacing() === item);
+        const facingIndex = this.directions.findIndex((item) => this.position?.facing === item);
         const newFacingIndex = (facingIndex - 1) < 0 ? this.directions.length - 1 : facingIndex - 1;
-        this.updatePosition(new Position(this.position.getRow(), this.position.getColumn(), this.directions[newFacingIndex]));
+        this.updatePosition({
+            ... this.position,
+            facing: this.directions[newFacingIndex]
+        });
     }
 
     rotateRight(): void {
         if (!this.position) {
             return;
         }
-        const facingIndex = this.directions.findIndex((item) => this.position?.getFacing() === item);
+        const facingIndex = this.directions.findIndex((item) => this.position?.facing === item);
         const newFacingIndex = (facingIndex + 1) === this.directions.length ? 0 : facingIndex + 1;
-        this.updatePosition(new Position(this.position.getRow(), this.position.getColumn(), this.directions[newFacingIndex]));
+        this.updatePosition({
+            ... this.position,
+            facing: this.directions[newFacingIndex]
+        });
     }
 
     move(): boolean {
@@ -78,29 +84,17 @@ class Robot implements IRobot {
             return false;
         }
         let newPosition;
-        switch (this.position.getFacing()) {
-            case Direction.NORTH: newPosition = new Position(
-                this.position.getRow() + 1,
-                this.position.getColumn(),
-                this.position.getFacing());
+        switch (this.position.facing) {
+            case Direction.NORTH: newPosition = { ...this.position, row: this.position.row + 1 }
                 break;
 
-            case Direction.EAST: newPosition = new Position(
-                this.position.getRow(),
-                this.position.getColumn() + 1,
-                this.position.getFacing());
+            case Direction.EAST: newPosition = { ...this.position, column: this.position.column + 1 }
                 break;
 
-            case Direction.SOUTH: newPosition = new Position(
-                this.position.getRow() - 1,
-                this.position.getColumn(),
-                this.position.getFacing());
+            case Direction.SOUTH: newPosition = { ...this.position, row: this.position.row - 1 }
                 break;
 
-            case Direction.WEST: newPosition = new Position(
-                this.position.getRow(),
-                this.position.getColumn() - 1,
-                this.position.getFacing());
+            case Direction.WEST: newPosition = { ...this.position, column: this.position.column - 1 }
                 break;
         }
 

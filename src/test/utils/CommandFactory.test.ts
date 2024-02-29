@@ -34,11 +34,11 @@ describe('Command Factory test suite', () => {
     });
 
     it.each([
-        { input: 'PLACE 0,0,NORTH', expected: new PlaceCommand(new Position(0, 0, Direction.NORTH)) },
-        { input: 'PLACE 2,3,EAST', expected: new PlaceCommand(new Position(3, 2, Direction.EAST)) },
-        { input: 'place 2,3,west', expected: new PlaceCommand(new Position(3, 2, Direction.WEST)) },
-        { input: ' PLACE   2 , 3 , EAST ', expected: new PlaceCommand(new Position(3, 2, Direction.EAST)) },
-        { input: 'PLACE 1,2,SOUTH', expected: new PlaceCommand(new Position(2, 1, Direction.SOUTH)) },
+        { input: 'PLACE 0,0,NORTH', expected: new PlaceCommand({ column: 0, row: 0, facing: Direction.NORTH }) },
+        { input: 'PLACE 2,3,EAST', expected: new PlaceCommand({ column: 2, row: 3, facing: Direction.EAST }) },
+        { input: 'place 2,3,west', expected: new PlaceCommand({ column: 2, row: 3, facing: Direction.WEST }) },
+        { input: ' PLACE   2 , 3 , EAST ', expected: new PlaceCommand({ column: 2, row: 3, facing: Direction.EAST }) },
+        { input: 'PLACE 1,2,SOUTH', expected: new PlaceCommand({ column: 1, row: 2, facing: Direction.SOUTH }) },
 
     ])('createCommandOrUndefined of "$input" should be instance of $expected', ({ input, expected }) => {
         const actual = createCommandOrUndefined(input);

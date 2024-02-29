@@ -9,7 +9,7 @@ describe('Command test suite', () => {
     beforeEach(() => {
         mockRobot = {
             rotateLeft: jest.fn(),
-            getPosition: jest.fn().mockReturnValue(new Position(2, 3, Direction.NORTH)),
+            getPosition: jest.fn().mockReturnValue({ column: 2, row: 3, facing: Direction.NORTH }),
             rotateRight: jest.fn(),
             move: jest.fn().mockReturnValue(true),
             place: jest.fn(),
@@ -17,7 +17,7 @@ describe('Command test suite', () => {
         };
     });
 
-    afterEach(()=>{
+    afterEach(() => {
         jest.clearAllMocks();
     })
 
